@@ -2,6 +2,8 @@ code
 Markdown
 # 🤖 AI-Driven ETL Pipeline Automation (NiFi + Ollama + MySQL)
 
+## 📊 Fluxo de Dados Gerado
+![Fluxo do Processo NiFi](docs/fluxo_nifi.png)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Apache NiFi](https://img.shields.io/badge/Apache%20NiFi-1.28-orange)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
