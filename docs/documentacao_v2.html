@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Técnico: Automação de ETL com Agentes de IA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+        h1 { margin: 0; font-size: 24px; }
+        h2 { color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: #e67e22; }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: #c7254e;
+        }
+        pre {
+            background-color: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .step {
+            background-color: #ebf5fb;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .warning {
+            background-color: #fef9e7;
+            border-left: 5px solid #f1c40f;
+            padding: 15px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Guia Técnico de Replicação: ETL Autônomo com IA</h1>
+    <p>Integração Apache NiFi + Ollama + Python + MySQL</p>
+</header>
+
+<div class="container">
+    <h2>1. Introdução</h2>
+    <p>Este documento detalha o processo de criação de um agente de inteligência artificial capaz de projetar, configurar e executar pipelines de dados no Apache NiFi de forma autônoma, utilizando processamento de linguagem natural (LLM) local para tomada de decisão.</p>
+
+    <h2>2. Pré-requisitos do Sistema</h2>
+    <ul>
+        <li><strong>Sistema Operacional:</strong> Windows 10/11 (PowerShell recomendado).</li>
+        <li><strong>Java:</strong> JDK 11 ou 17 (Necessário para o Apache NiFi).</li>
+        <li><strong>Python:</strong> Versão 3.10 ou superior.</li>
+        <li><strong>Banco de Dados:</strong> MySQL 8.0+.</li>
+        <li><strong>Hardware:</strong> Mínimo 16GB RAM (recomendado para rodar NiFi + IA simultaneamente).</li>
+    </ul>
+
+    <h2>3. Preparação do Ambiente</h2>
+
+    <h3>3.1. Apache NiFi</h3>
+    <div class="step">
+        1. Baixe o binário do NiFi em <a href="https://nifi.apache.org/download.html">nifi.apache.org</a>.<br>
+        2. Extraia em <code>C:\nifi</code>.<br>
+        3. Execute <code>bin\run-nifi.bat</code>.<br>
+        4. No primeiro boot, abra <code>logs\nifi-app.log</code> e procure por <strong>Generated Username</strong> e <strong>Generated Password</strong>.
+    </div>
+
+    <h3>3.2. Ollama (Cérebro da IA)</h3>
+    <div class="step">
+        1. Instale o Ollama em <a href="https://ollama.com">ollama.com</a>.<br>
+        2. No terminal, baixe o modelo leve: <code>ollama run llama3.2</code>.<br>
+        3. Mantenha o Ollama rodando durante toda a execução do projeto.
+    </div>
+
+    <h3>3.3. Ambiente Python</h3>
+    <div class="step">
+        Crie um ambiente virtual e instale as bibliotecas de integração:
+        <pre>
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install nipyapi langchain_openai urllib3
+        </pre>
+    </div>
+
+    <h2>4. Configuração do Banco de Dados (MySQL)</h2>
+    <p>Execute o script abaixo para preparar a tabela de destino:</p>
+    <pre>
+CREATE DATABASE db_automacao_ia;
+USE db_automacao_ia;
+
+CREATE TABLE tb_posts_tecnologia (
+    id INT PRIMARY KEY,
+    userId INT,
+    title VARCHAR(255),
+    body TEXT,
+    data_importacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</pre>
+
+    <h2>5. O Script de Automação (Coração do Projeto)</h2>
+    <p>Este script Python utiliza o <strong>NiPyApi</strong> para comandos técnicos e <strong>LangChain</strong> para conectar ao Ollama. Salve como <code>agente_nifi_mysql.py</code>.</p>
+
+    <pre>
+# -*- coding: utf-8 -*-
+import nipyapi
+from nipyapi import canvas, security
+import urllib3
+import re
+from langchain_openai import ChatOpenAI
+
+# Desativa avisos de seguranca
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# CONFIGURACOES NIFI
+NIFI_USER = 'SEU_USUARIO_AQUI'
+NIFI_PASS = 'SUA_SENHA_AQUI'
+nipyapi.config.nifi_config.host = 'https://localhost:8443/nifi-api'
+nipyapi.config.nifi_config.verify_ssl = False
+nipyapi.config.nifi_config.username = NIFI_USER
+nipyapi.config.nifi_config.password = NIFI_PASS
+
+def montar_pipeline(nome_projeto, sql_ia, url_api):
+    security.service_login(username=NIFI_USER, password=NIFI_PASS)
+    root_id = canvas.get_root_pg_id()
+    root_pg = canvas.get_process_group(root_id, 'id')
+
+    # 1. CRIAR EXTRATOR (InvokeHTTP)
+    type_http = canvas.get_processor_type('InvokeHTTP')
+    proc_http = canvas.create_processor(root_pg, type_http, (400, 100), f"API_{nome_projeto}")
+    conf_http = proc_http.component.config
+    conf_http.properties = {'Remote URL': url_api}
+    conf_http.auto_terminated_relationships = ['Original', 'Failure', 'Retry', 'No Retry']
+    canvas.update_processor(proc_http, conf_http)
+
+    # 2. CRIAR FILTRO (QueryRecord)
+    type_query = canvas.get_processor_type('QueryRecord')
+    proc_query = canvas.create_processor(root_pg, type_query, (400, 350), "FILTRO_IA")
+    conf_query = proc_query.component.config
+    conf_query.properties = {'tech_posts': sql_ia}
+    conf_query.auto_terminated_relationships = ['original', 'failure']
+    canvas.update_processor(proc_query, conf_query)
+
+    # 3. CRIAR CARREGADOR (PutDatabaseRecord)
+    type_db = canvas.get_processor_type('PutDatabaseRecord')
+    proc_db = canvas.create_processor(root_pg, type_db, (400, 600), "MYSQL_LOADER")
+    conf_db = proc_db.component.config
+    conf_db.properties = {'Statement Type': 'INSERT', 'Table Name': 'tb_posts_tecnologia', 'Database Dialect': 'MySQL'}
+    conf_db.auto_terminated_relationships = ['success', 'failure', 'retry']
+    canvas.update_processor(proc_db, conf_db)
+
+    # 4. CONECTAR COMPONENTES
+    canvas.create_connection(proc_http, proc_query, relationships=['Response'])
+    proc_q_new = canvas.get_processor(proc_query.id, 'id')
+    canvas.create_connection(proc_q_new, proc_db, relationships=['tech_posts'])
+    return "Pipeline Criado com Sucesso!"
+
+# IA PENSANDO
+llm = ChatOpenAI(model='llama3.2', base_url="http://localhost:11434/v1", api_key="ollama")
+prompt = "SQL SELECT FROM FLOWFILE WHERE title LIKE '%software%'. Only SQL."
+sql_limpo = re.sub(r'```sql|```|`', '', llm.invoke(prompt).content.strip()).replace('\n', ' ')
+
+print(montar_pipeline("PROJETO_IA", sql_limpo, "https://jsonplaceholder.typicode.com/posts"))</pre>
+
+    <h2>6. Configurações Manuais no NiFi</h2>
+    <div class="warning">
+        Importante: Os "Controller Services" devem ser ativados manualmente na interface para que o NiFi tenha acesso aos drivers JDBC do MySQL.
+    </div>
+    <ul>
+        <li><strong>DBCPConnectionPool:</strong> Configure com o driver <code>mysql-connector-java.jar</code> e a URL <code>jdbc:mysql://localhost:3306/db_automacao_ia</code>.</li>
+        <li><strong>JsonTreeReader:</strong> Para ler os dados JSON da API.</li>
+        <li><strong>JsonRecordSetWriter:</strong> Para preparar o dado para o MySQL.</li>
+    </ul>
+
+    <h2>7. Troubleshooting (Resolução de Problemas)</h2>
+    <ul>
+        <li><strong>Erro 401 Unauthorized:</strong> O usuário e senha do NiFi mudam se você apagar a pasta <code>conf</code>. Verifique sempre o log.</li>
+        <li><strong>SyntaxError Unicode:</strong> Nunca use acentos nos comentários ou strings do Python se estiver usando o PowerShell sem configuração UTF-8.</li>
+        <li><strong>Relationship Invalid:</strong> Se a "setinha" entre o Filtro e o Banco der erro, certifique-se de que o nome da propriedade no <code>QueryRecord</code> é idêntico ao nome da Relationship na conexão.</li>
+    </ul>
+
+</div>
+
+<footer>
+    Guia gerado para fins de documentação técnica de Engenharia de Dados & Inteligência Artificial.
+</footer>
+
+</body>
+</html>

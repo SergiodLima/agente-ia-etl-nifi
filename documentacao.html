@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação: Automação de ETL com IA</title>
+    <!-- Importando a biblioteca Mermaid para renderizar diagramas -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --code-bg: #1e1e1e;
+            --code-text: #dcdcdc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 { color: var(--primary-color); margin-top: 0; }
+        h2 { color: var(--secondary-color); border-left: 5px solid var(--secondary-color); padding-left: 10px; margin-top: 40px; }
+        h3 { color: var(--primary-color); }
+
+        .intro-box {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+        }
+
+        .mermaid {
+            background: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        ul, ol {
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 50px;
+            font-size: 0.9em;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Automação de ETL com Agentes de IA</h1>
+        <p><strong>Projeto:</strong> Integração NiFi + Ollama (Llama 3.2)</p>
+    </header>
+
+    <div class="intro-box">
+        Excelente iniciativa! Documentar é o que transforma um "teste que deu certo" em um <strong>projeto profissional</strong> que você pode apresentar no seu portfólio ou na sua empresa.
+    </div>
+
+    <section>
+        <h2>1. Desenho do Fluxo (Arquitetura do Sistema)</h2>
+        <p>Este diagrama representa como a informação flui desde o seu comando até a criação do objeto no NiFi.</p>
+        
+        <div class="mermaid">
+            graph TD
+                subgraph "Camada de Interação"
+                    A[Usuário/Prompt] -->|Ordem em Linguagem Natural| B[Script Python]
+                end
+
+                subgraph "Cérebro (IA Local)"
+                    B -->|Prompt de Decisão| C[Ollama / Llama 3.2]
+                    C -->|Sugestão de Nome/URL| B
+                end
+
+                subgraph "Motor de Automação"
+                    B -->|Comando Técnico via NiPyApi| D[Apache NiFi REST API]
+                    D -->|Criação de Objeto| E[NiFi Canvas]
+                end
+
+                style C fill:#f96,stroke:#333,stroke-width:2px
+                style E fill:#dfd,stroke:#333,stroke-width:4px
+        </div>
+    </section>
+
+    <article>
+        <h2>2. Relatório Técnico</h2>
+        <p>Este projeto demonstra a integração de Modelos de Linguagem de Grande Escala (LLMs) com ferramentas de engenharia de dados (Apache NiFi) para automação autônoma de fluxos de ingestão.</p>
+
+        <h3>🚀 Objetivo</h3>
+        <p>Criar um sistema capaz de interpretar ordens em linguagem natural e executar tarefas técnicas de configuração de ETL, eliminando a necessidade de intervenção manual na interface gráfica (GUI) do NiFi.</p>
+
+        <h3>🛠️ Tecnologias Utilizadas</h3>
+        <ul>
+            <li><strong>Apache NiFi:</strong> Ferramenta de orquestração de fluxos de dados.</li>
+            <li><strong>Python 3.10+:</strong> Linguagem base para o sistema nervoso da automação.</li>
+            <li><strong>Ollama (Llama 3.2 / Phi-3):</strong> Servidor de IA local para processamento de linguagem natural.</li>
+            <li><strong>NiPyApi:</strong> SDK de Python para interação com a API REST do NiFi.</li>
+            <li><strong>LangChain:</strong> Framework para conexão entre o código e o modelo de IA.</li>
+        </ul>
+
+        <h3>📋 Pré-requisitos</h3>
+        <ol>
+            <li><strong>Java JRE/JDK 11+</strong> (para rodar o NiFi).</li>
+            <li><strong>Apache NiFi</strong> rodando em <code>https://localhost:8443</code>.</li>
+            <li><strong>Ollama</strong> instalado com o modelo <code>llama3.2</code> ou <code>phi3</code>.</li>
+            <li>Ambiente Virtual Python configurado:
+                <pre>pip install nipyapi langchain_openai urllib3</pre>
+            </li>
+        </ol>
+
+        <h3>🧠 Implementação do Agente de IA</h3>
+        <p>O processo de automação seguiu três etapas fundamentais:</p>
+        
+        <h4>1. Conexão e Segurança</h4>
+        <p>Implementação de bypass para certificados SSL autoassinados e autenticação via token utilizando as credenciais geradas dinamicamente pelo Apache NiFi.</p>
+
+        <h4>2. Lógica de Automação (Ferramentas)</h4>
+        <p>Desenvolvimento de funções Python capazes de identificar o Grupo de Processo Raiz, instanciar processadores <code>InvokeHTTP</code> e configurar propriedades dinamicamente.</p>
+
+        <h4>3. Integração com LLM (Cérebro)</h4>
+        <p>O modelo de IA recebe uma descrição de negócio e decide o <strong>Nome técnico</strong> e a <strong>URL</strong> da API pública mais adequada para a tarefa.</p>
+
+        <h3>📈 Resultados Alcançados</h3>
+        <ul>
+            <li><span class="badge">Autonomia</span> Criação de componentes sem cliques manuais.</li>
+            <li><span class="badge">Flexibilidade</span> IA sugere nomes criativos e URLs válidas.</li>
+            <li><span class="badge">Eficiência</span> Redução do tempo de configuração de minutos para segundos.</li>
+        </ul>
+
+        <h3>📝 Exemplo de Execução</h3>
+<pre>
+# Comando enviado à IA:
+"Preciso de um processo para ler dados de clima."
+
+# Decisão da IA:
+Nome: "Processo_Climatologico_Global_IA"
+URL: "https://api.open-meteo.com/v1/forecast"
+
+# Resultado no NiFi:
+Componente InvokeHTTP criado e configurado automaticamente.
+</pre>
+    </article>
+
+    <section>
+        <h2>3. Como utilizar este documento?</h2>
+        <p>Para manter este documento e o projeto organizados, siga as sugestões:</p>
+        <ul>
+            <li><strong>Documentação Local:</strong> Salve este código como <code>index.html</code> para visualização rápida no navegador.</li>
+            <li><strong>GitHub:</strong> Utilize a versão em Markdown para o arquivo <code>README.md</code> do seu repositório.</li>
+            <li><strong>LinkedIn:</strong> Compartilhe o progresso com a comunidade técnica destacando a integração <strong>IA + Dados</strong>.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 - Documentação de Projeto de Engenharia de Dados Autônoma</p>
+    </footer>
+</div>
+
+</body>
+</html>

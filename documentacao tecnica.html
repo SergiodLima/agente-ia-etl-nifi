@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Técnico: Automação NiFi com Agentes de IA</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <style>
+        :root {
+            --primary-color: #1a2a3a;
+            --secondary-color: #2980b9;
+            --accent-color: #27ae60;
+            --warning-color: #f39c12;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --code-bg: #282c34;
+            --code-text: #abb2bf;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        header {
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        h1 { color: var(--primary-color); font-size: 2.2em; margin-bottom: 10px; }
+        h2 { color: var(--secondary-color); border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: var(--primary-color); margin-top: 25px; }
+
+        .architecture-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .step-card {
+            border-left: 4px solid var(--secondary-color);
+            background: #fcfcfc;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .step-number {
+            background: var(--secondary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ffeeba;
+            margin: 20px 0;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Guia Técnico de Replicação</h1>
+        <p>Automação de Pipelines ETL com Agentes de IA Local (NiFi + Ollama)</p>
+    </header>
+
+    <section>
+        <h2>1. Visão Geral da Arquitetura</h2>
+        <p>Este sistema utiliza um modelo de linguagem (LLM) para traduzir requisitos de negócio em comandos técnicos via API REST, automatizando a orquestração no Apache NiFi.</p>
+        
+        <div class="architecture-box">
+            <div class="mermaid">
+                graph LR
+                    A[Prompt Usuário] --> B[Agente Python]
+                    B --> C{Ollama Llama 3.2}
+                    C -->|Decisão Técnica| B
+                    B --> D[NiPyApi / REST API]
+                    D --> E[Canvas NiFi]
+                    
+                    style C fill:#4a90e2,stroke:#fff,color:#fff
+                    style E fill:#27ae60,stroke:#fff,color:#fff
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Guia de Implementação (Passo a Passo)</h2>
+        <p>Siga estas etapas para replicar o ambiente de automação autônoma.</p>
+
+        <!-- Passo 1 -->
+        <div class="step-card">
+            <h3><span class="step-number">1</span> Configuração do Ambiente de IA</h3>
+            <p>O cérebro do sistema roda localmente para garantir privacidade e baixa latência.</p>
+            <ul>
+                <li>Instale o <strong>Ollama</strong> (ollama.com).</li>
+                <li>Baixe o modelo necessário via terminal:
+                    <pre>ollama pull llama3.2</pre>
+                </li>
+                <li>Certifique-se de que o serviço está rodando em <code>http://localhost:11434</code>.</li>
+            </ul>
+        </div>
+
+        <!-- Passo 2 -->
+        <div class="step-card">
+            <h3><span class="step-number">2</span> Preparação do Apache NiFi</h3>
+            <p>O NiFi atuará como o motor de execução do ETL.</p>
+            <ul>
+                <li>Inicie o NiFi (recomendado versão 1.15+ ou 2.x).</li>
+                <li>Acesse as <strong>Controller Settings</strong> e certifique-se de ter um usuário com permissões de leitura/escrita no canvas.</li>
+                <li>Caso use HTTPS com certificado autoassinado, prepare as credenciais (Login/Password ou Token).</li>
+            </ul>
+        </div>
+
+        <!-- Passo 3 -->
+        <div class="step-card">
+            <h3><span class="step-number">3</span> Setup do Ambiente Python</h3>
+            <p>Instale as dependências para conectar a IA ao NiFi:</p>
+            <pre>pip install nipyapi langchain_openai urllib3</pre>
+            <div class="alert">
+                <strong>Nota:</strong> Usamos <code>langchain_openai</code> apontando para o endpoint local do Ollama para manter compatibilidade de API.
+            </div>
+        </div>
+
+        <!-- Passo 4 -->
+        <div class="step-card">
+            <h3><span class="step-number">4</span> Implementação do Script de Automação</h3>
+            <p>O script deve conter três componentes lógicos principais:</p>
+            <ol>
+                <li><strong>Conexão:</strong> Configurar <code>nipyapi.config.nifi_config.host</code>.</li>
+                <li><strong>Prompt System:</strong> Instruir a IA a retornar apenas JSON com <code>"nome_processador"</code> e <code>"url_api"</code>.</li>
+                <li><strong>Execução:</strong> Utilizar <code>nipyapi.canvas.create_processor()</code> para instanciar o componente no NiFi.</li>
+            </ol>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. Lógica do Agente (Prompt Engineering)</h2>
+        <p>Para o sucesso da replicação, o <strong>System Prompt</strong> deve ser rigoroso:</p>
+        <pre>
+"Você é um engenheiro de dados sênior. 
+Sua tarefa é receber um pedido de negócio e transformá-lo em parâmetros técnicos.
+Retorne SEMPRE no formato JSON:
+{
+  'name': '[Nome Profissional]',
+  'url': '[URL de API pública real correspondente]'
+}"</pre>
+    </section>
+
+    <section>
+        <h2>4. Resultados e Validação</h2>
+        <p>Após a execução do script, valide os seguintes pontos na interface do NiFi:</p>
+        <ul>
+            <li>O processador <code>InvokeHTTP</code> foi criado no Root Process Group?</li>
+            <li>A propriedade <code>Remote URL</code> foi preenchida corretamente pela IA?</li>
+            <li>O nome do componente segue o padrão profissional sugerido?</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>Guia Técnico de Automação Experimental &copy; 2024 - Criado para Fins de Documentação de Engenharia de Dados.</p>
+    </footer>
+</div>
+
+</body>
+</html>
