@@ -1,0 +1,22 @@
+venv/
+.env
+__pycache__/
+*.log
+.vscode/
+.py
+.html
+documentacao2.md
+agente_nifi_direto.py
+agente_nifi_final_v5.py
+agente_nifi_full_stack.py
+agente_nifi_mysql.py
+agente_nifi_mysql_v2.py
+agente_nifi_pipeline.py
+agente_nifi_pipeline_final.py
+agente_nifi_pipeline_v2.py
+agente_nifi_ultra_v4.py
+teste_conexao.py
+teste_nifi.py
+documentacao tecnica.html
+documentacao.html
+documentacao_v2.html
