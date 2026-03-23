@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatorio Final: Ecossistema de ETL Autonomo com IA</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --bg: #f4f7f6;
+            --text: #333;
+        }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); margin: 0; padding: 0; }
+        .sidebar { width: 250px; position: fixed; height: 100%; background: var(--primary); color: white; padding: 20px; overflow-y: auto; }
+        .content { margin-left: 290px; padding: 40px; max-width: 1000px; }
+        header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 40px; border-radius: 8px; margin-bottom: 30px; text-align: center; }
+        h1 { margin: 0; font-size: 2.2em; }
+        h2 { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: var(--accent); }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        pre { background: #2d2d2d; color: #ccc; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 14px; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-right: 5px; }
+        .badge-ai { background: #9b59b6; color: white; }
+        .badge-data { background: #3498db; color: white; }
+        .badge-tools { background: #f1c40f; color: black; }
+        .status-ready { border-left: 5px solid var(--success); }
+        footer { text-align: center; padding: 40px; color: #7f8c8d; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: var(--primary); color: white; }
+        a { color: white; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h3>Sumario</h3>
+    <p><a href="#intro">1. Introducao</a></p>
+    <p><a href="#stack">2. Stack Tecnologica</a></p>
+    <p><a href="#arch">3. Arquitetura MCP</a></p>
+    <p><a href="#impl">4. Implementacao ETL</a></p>
+    <p><a href="#audit">5. Auditoria de IA</a></p>
+    <p><a href="#ops">6. Guia Operacional</a></p>
+</div>
+
+<div class="content">
+    <header>
+        <h1>AI Data Engineering Framework</h1>
+        <p>Automacao de Pipelines ETL com Agentes Autonomos e Protocolo MCP</p>
+    </header>
+
+    <section id="intro">
+        <div class="card status-ready">
+            <h2>1. Introducao</h2>
+            <p>Este projeto representa a convergencia entre a <strong>Engenharia de Dados Tradicional</strong> e a <strong>Inteligencia Artificial Generativa</strong>. O objetivo principal foi criar um sistema autonomo capaz de gerenciar a infraestrutura de dados (Apache NiFi), tomar decisoes de filtragem de dados e persistir informacoes em um banco de dados relacional (MySQL) sem intervencao manual continua.</p>
+        </div>
+    </section>
+
+    <section id="stack">
+        <h2>2. Stack Tecnologica</h2>
+        <table>
+            <tr><th>Componente</th><th>Tecnologia</th><th>Papel no Projeto</th></tr>
+            <tr><td><strong>Cerebro</strong></td><td>Ollama (Llama 3.2)</td><td>Tomada de decisao e geracao de SQL.</td></tr>
+            <tr><td><strong>Orquestrador</strong></td><td>Apache NiFi 1.28</td><td>Motor de ingestao e carga (ETL).</td></tr>
+            <tr><td><strong>Controle Remoto</strong></td><td>NiPyApi (Python)</td><td>Interface de comunicacao com a API do NiFi.</td></tr>
+            <tr><td><strong>Protocolo</strong></td><td>MCP (Model Context Protocol)</td><td>Padronizacao de ferramentas para a IA.</td></tr>
+            <tr><td><strong>Destino</strong></td><td>MySQL 8.0</td><td>Repositorio final dos dados estruturados.</td></tr>
+        </table>
+    </section>
+
+    <section id="arch">
+        <h2>3. Arquitetura MCP (Model Context Protocol)</h2>
+        <div class="card">
+            <p>Diferente de scripts comuns, este projeto implementou um <strong>Servidor MCP</strong>. Isso permite que qualquer modelo de linguagem utilize o Apache NiFi como uma extensao de suas capacidades nativas.</p>
+            <h3>Ferramentas Expostas (Tools):</h3>
+            <ul>
+                <li><code>create_nifi_processor</code>: Capacidade de expansao do Canvas.</li>
+                <li><code>list_canvas_state</code>: Capacidade de leitura e consciencia situacional.</li>
+                <li><code>get_nifi_bulletins</code>: Capacidade de diagnostico de erros.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="impl">
+        <h2>4. Implementacao do Pipeline ETL</h2>
+        <div class="card">
+            <h3>Fluxo de Dados:</h3>
+            <ol>
+                <li><strong>Extracao:</strong> Chamada via <code>InvokeHTTP</code> para APIs REST.</li>
+                <li><strong>Filtragem:</strong> Uso de <code>QueryRecord</code> com SQL gerado pela IA.</li>
+                <li><strong>Carga:</strong> Persistencia via <code>PutDatabaseRecord</code> no MySQL.</li>
+                <li><strong>Observabilidade:</strong> Log de erros automático sugerido pela IA.</li>
+            </ol>
+            <pre>
+# Exemplo de SQL gerado pela IA para filtragem
+SELECT * FROM FLOWFILE
+WHERE title LIKE '%technology%'
+OR body LIKE '%software%'
+            </pre>
+        </div>
+    </section>
+
+    <section id="audit">
+        <h2>5. Auditoria de IA e Self-Healing</h2>
+        <div class="card">
+            <p>O estagio final envolveu um <strong>Agente Auditor (CrewAI)</strong>. O agente analisou os componentes ativos e identificou a ausencia de tratamento de excecoes. Como resultado, ele recomendou a criacao de um processador de logs de erro (LOG_ERRO_AUTOMATICO).</p>
+        </div>
+    </section>
+
+    <section id="ops">
+        <h2>6. Guia Operacional (Manutencao)</h2>
+        <div class="card">
+            <h3>Como Reiniciar o Ecossistema:</h3>
+            <ol>
+                <li>Ligar <strong>MySQL</strong>.</li>
+                <li>Ligar <strong>Ollama</strong> (<code>ollama run llama3.2</code>).</li>
+                <li>Ligar <strong>Apache NiFi</strong> (<code>run-nifi.bat</code>).</li>
+                <li>Ativar <strong>Ambiente Python</strong> (<code>.\venv\Scripts\Activate.ps1</code>).</li>
+                <li>Rodar o <strong>Inspetor MCP</strong> para testes:
+                    <br><code>npx @modelcontextprotocol/inspector python src/nifi_mcp_server.py</code>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <footer>
+        <hr>
+        <p>Desenvolvido por Sergio | Engenheiro de Dados e Especialista em Automacao de IA</p>
+        <p><span class="badge badge-ai">Artificial Intelligence</span> <span class="badge badge-data">Data Engineering</span> <span class="badge badge-tools">Automation</span></p>
+    </footer>
+</div>
+
+</body>
+</html>
